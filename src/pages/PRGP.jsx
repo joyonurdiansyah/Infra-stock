@@ -4,10 +4,13 @@ import { fetchPrGp } from "../services/prGpService";
 import PRGPFilter from "../components/PRGPFilter";
 import PRGPTable from "../components/PRGPTable";
 
-  export default function PRGP() {
+export default function PRGP() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  const [collapsed, setCollapsed] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleSearch = async (payload) => {
     setLoading(true);
@@ -18,7 +21,7 @@ import PRGPTable from "../components/PRGPTable";
       const result = await fetchPrGp(payload);
       setData(result);
     } catch (err) {
-      console.error("Error fetch PR GP:", err);
+      console.error(err);
       setError("Gagal mengambil data PR");
     } finally {
       setLoading(false);
@@ -26,19 +29,31 @@ import PRGPTable from "../components/PRGPTable";
   };
 
   return (
-    <div className="d-flex">
-      <Sidebar />
+    <div className="app-layout">
+      {/* Sidebar */}
+      <Sidebar
+        collapsed={collapsed}
+        setCollapsed={setCollapsed}
+        mobileOpen={mobileOpen}
+        setMobileOpen={setMobileOpen}
+      />
 
-      <div className="flex-grow-1 p-4">
+      {/* Content */}
+      <main className="app-content">
+        {/* Mobile Hamburger */}
+        <button
+          className="btn btn-purple d-lg-none mb-3"
+          onClick={() => setMobileOpen(true)}
+        >
+          <i className="fas fa-bars"></i>
+        </button>
+
         <h4 className="mb-3">PR GP</h4>
 
-        {/* Filter */}
         <PRGPFilter onSubmit={handleSearch} loading={loading} />
 
-        {/* Error */}
         {error && <div className="alert alert-danger">{error}</div>}
 
-        {/* Table */}
         <div className="card shadow-sm">
           <div className="card-body p-0">
             {loading ? (
@@ -48,7 +63,7 @@ import PRGPTable from "../components/PRGPTable";
             )}
           </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 }

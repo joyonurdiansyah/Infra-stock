@@ -2,7 +2,12 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { logout } from "../services/authService";
 import "../styles/sidebar.css";
 
-export default function Sidebar({ collapsed, mobileOpen, setMobileOpen, setCollapsed }) {
+export default function Sidebar({
+    collapsed,
+    setCollapsed,
+    mobileOpen,
+    setMobileOpen,
+}) {
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -22,26 +27,26 @@ export default function Sidebar({ collapsed, mobileOpen, setMobileOpen, setColla
 
     return (
         <>
-            {/* Overlay mobile */}
+            {/* Overlay */}
             {mobileOpen && (
-                <div className="sidebar-overlay" onClick={() => setMobileOpen(false)} />
+                <div
+                    className="sidebar-overlay"
+                    onClick={() => setMobileOpen(false)}
+                />
             )}
 
             <aside
                 id="nav-bar"
-                className={`
-                    ${collapsed ? "collapsed" : ""}
-                    ${mobileOpen ? "mobile-open" : ""}
-                `}
+                className={`${collapsed ? "collapsed" : ""} ${mobileOpen ? "mobile-open" : ""
+                    }`}
             >
-                {/* Header */}
                 <div id="nav-header">
                     <div id="nav-title">
                         <i className="fas fa-codepen me-2"></i>
                         <span>InfraStock</span>
                     </div>
 
-                    {/* Desktop toggle */}
+                    {/* Desktop collapse */}
                     <button
                         className="toggle-btn d-none d-lg-block"
                         onClick={() => setCollapsed(!collapsed)}
@@ -60,7 +65,6 @@ export default function Sidebar({ collapsed, mobileOpen, setMobileOpen, setColla
 
                 <hr />
 
-                {/* Menu */}
                 <div id="nav-content">
                     {activeIndex >= 0 && (
                         <div
@@ -73,9 +77,8 @@ export default function Sidebar({ collapsed, mobileOpen, setMobileOpen, setColla
                         <Link
                             key={item.path}
                             to={item.path}
-                            className={`nav-button ${
-                                location.pathname === item.path ? "active" : ""
-                            }`}
+                            className={`nav-button ${location.pathname === item.path ? "active" : ""
+                                }`}
                             onClick={() => setMobileOpen(false)}
                         >
                             <i className={item.icon}></i>
@@ -84,7 +87,6 @@ export default function Sidebar({ collapsed, mobileOpen, setMobileOpen, setColla
                     ))}
                 </div>
 
-                {/* Logout */}
                 <div className="p-3">
                     <button onClick={handleLogout} className="btn btn-danger w-100">
                         <i className="fas fa-sign-out-alt me-2"></i>

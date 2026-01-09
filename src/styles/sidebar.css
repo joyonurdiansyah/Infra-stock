@@ -3,8 +3,20 @@
   --navbar-width-min: 80px;
 }
 
+/* ===== LAYOUT ===== */
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.app-content {
+  flex-grow: 1;
+  padding: 24px;
+  min-width: 0;
+}
+
+/* ===== SIDEBAR ===== */
 #nav-bar {
-  height: 100vh;
   width: var(--navbar-width);
   background: #18283b;
   border-right: 6px solid #9c88ff;
@@ -13,15 +25,14 @@
   flex-direction: column;
   color: #f5f6fa;
   transition: width 0.3s ease;
-  overflow: hidden;
 }
 
-/* COLLAPSED */
+/* Collapsed desktop */
 #nav-bar.collapsed {
   width: var(--navbar-width-min);
 }
 
-/* HEADER */
+/* ===== HEADER ===== */
 #nav-header {
   display: flex;
   align-items: center;
@@ -35,25 +46,21 @@
   font-size: 1.2rem;
   font-weight: bold;
   white-space: nowrap;
-  transition: opacity 0.2s ease;
 }
 
 #nav-bar.collapsed #nav-title span {
-  opacity: 0;
-  width: 0;
-  overflow: hidden;
+  display: none;
 }
 
-/* TOGGLE BUTTON */
+/* ===== TOGGLE ===== */
 .toggle-btn {
   background: none;
   border: none;
   color: #fff;
   font-size: 1.3rem;
-  cursor: pointer;
 }
 
-/* CONTENT */
+/* ===== MENU ===== */
 #nav-content {
   position: relative;
   flex: 1;
@@ -67,10 +74,9 @@
   border-radius: 14px 0 0 14px;
   left: 8px;
   transition: top 0.25s ease;
-  z-index: 0;
+  z-index: 1;
 }
 
-/* MENU ITEM */
 .nav-button {
   height: 54px;
   display: flex;
@@ -79,41 +85,34 @@
   color: #bbd2f0;
   text-decoration: none;
   position: relative;
-  z-index: 1;
-  transition: background 0.2s ease;
+  z-index: 2;
 }
+
 
 .nav-button i {
   width: 40px;
   text-align: center;
-  font-size: 1.1rem;
-}
-
-.nav-button span {
-  transition: opacity 0.2s ease;
 }
 
 #nav-bar.collapsed .nav-button span {
-  opacity: 0;
-  width: 0;
-  overflow: hidden;
+  display: none;
 }
 
-/* ACTIVE */
 .nav-button.active {
   background: #9c88ff;
   border-radius: 14px 0 0 14px;
   color: #fff;
 }
 
-/* MOBILE MODE */
+/* ===== MOBILE & TABLET ===== */
 @media (max-width: 991.98px) {
   #nav-bar {
     position: fixed;
     left: -100%;
     top: 0;
-    z-index: 1040;
     height: 100vh;
+    z-index: 99;
+    width: var(--navbar-width);
     transition: left 0.3s ease;
   }
 
@@ -121,15 +120,21 @@
     left: 0;
   }
 
-  #nav-bar.collapsed {
-    width: var(--navbar-width);
-  }
-
   .sidebar-overlay {
     position: fixed;
     inset: 0;
     background: rgba(0, 0, 0, 0.4);
-    z-index: 1030;
+    z-index: 98;
   }
 }
 
+/* ===== PURPLE BUTTON ===== */
+.btn-purple {
+  background: #9c88ff;
+  color: #fff;
+  border: none;
+}
+
+.btn-purple:hover {
+  background: #7f6bff;
+}
