@@ -3,14 +3,16 @@ import Sidebar from "../components/Sidebar";
 import { fetchPrGp } from "../services/prGpService";
 import PRGPFilter from "../components/PRGPFilter";
 import PRGPTable from "../components/PRGPTable";
+import {
+  alertSuccess,
+  alertWarning,
+  alertError,
+} from "../utils/Alert";
 
 export default function PRGP() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-
-  const [collapsed, setCollapsed] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleSearch = async (payload) => {
     setLoading(true);
@@ -19,9 +21,30 @@ export default function PRGP() {
 
     try {
       const result = await fetchPrGp(payload);
+
+      if (!result || result.length === 0) {
+        alertWarning(
+          "Data Tidak Ditemukan",
+          "Coba pastikan Description dan No PR sesuai dengan yang dibuat oleh Admin IT"
+        );
+        setData([]);
+        return;
+      }
+
       setData(result);
+
+      alertSuccess(
+        "Data Ditemukan",
+        `Berhasil menemukan ${result.length} data PR`
+      );
     } catch (err) {
-      console.error(err);
+      console.error("Error fetch PR GP:", err);
+
+      alertError(
+        "Gagal Mengambil Data",
+        "Terjadi kesalahan saat mengambil data PR"
+      );
+
       setError("Gagal mengambil data PR");
     } finally {
       setLoading(false);
@@ -30,24 +53,9 @@ export default function PRGP() {
 
   return (
     <div className="app-layout">
-      {/* Sidebar */}
-      <Sidebar
-        collapsed={collapsed}
-        setCollapsed={setCollapsed}
-        mobileOpen={mobileOpen}
-        setMobileOpen={setMobileOpen}
-      />
+      <Sidebar />
 
-      {/* Content */}
       <main className="app-content">
-        {/* Mobile Hamburger */}
-        <button
-          className="btn btn-purple d-lg-none mb-3"
-          onClick={() => setMobileOpen(true)}
-        >
-          <i className="fas fa-bars"></i>
-        </button>
-
         <h4 className="mb-3">PR GP</h4>
 
         <PRGPFilter onSubmit={handleSearch} loading={loading} />

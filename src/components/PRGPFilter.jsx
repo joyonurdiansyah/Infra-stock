@@ -29,6 +29,9 @@ export default function PRGPFilter({ onSubmit, loading }) {
                     value={form.Departement}
                     onChange={handleChange}
                 />
+                <small className="fst-italic text-secondary">
+                    Contoh: <code>"project"</code>
+                </small>
             </div>
 
             <div className="col-md-4">
@@ -40,6 +43,11 @@ export default function PRGPFilter({ onSubmit, loading }) {
                     value={form.PR_Desc}
                     onChange={handleChange}
                 />
+                <small className="fst-italic text-secondary">
+                    Contoh: <code>"PR/0049/XI/25/"</code>
+                    <br />
+                    Pastikan sesuai dengan No PR yang dibuat oleh Admin IT
+                </small>
             </div>
 
             <div className="col-md-2">
