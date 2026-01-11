@@ -7,7 +7,6 @@ export default function Dashboard() {
 
   return (
     <div className="d-flex min-vh-100 bg-light">
-      {/* Sidebar */}
       <Sidebar
         collapsed={collapsed}
         setCollapsed={setCollapsed}
@@ -15,12 +14,9 @@ export default function Dashboard() {
         setMobileOpen={setMobileOpen}
       />
 
-      {/* Main Content */}
       <div className="flex-grow-1 w-100">
-        {/* Top Bar */}
         <nav className="navbar navbar-light bg-white shadow-sm px-3 px-lg-4">
           <div className="d-flex align-items-center gap-3">
-            {/* Mobile toggle */}
             <button
               className="btn btn-outline-secondary d-lg-none"
               onClick={() => setMobileOpen(true)}
@@ -36,10 +32,8 @@ export default function Dashboard() {
           </span>
         </nav>
 
-        {/* Content */}
         <div className="container-fluid p-3 p-lg-4">
 
-          {/* Welcome */}
           <div className="card shadow-sm mb-4 border-0">
             <div className="card-body">
               <h5 className="fw-bold mb-1">Selamat Datang 👋</h5>
@@ -49,7 +43,6 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {/* Info Cards */}
           <div className="row g-3 g-lg-4 mb-4">
             {[
               { title: "Total PR", value: 24 },
@@ -69,7 +62,6 @@ export default function Dashboard() {
             ))}
           </div>
 
-          {/* Table */}
           <div className="card shadow-sm border-0">
             <div className="card-header bg-white fw-semibold">
               PR Terbaru

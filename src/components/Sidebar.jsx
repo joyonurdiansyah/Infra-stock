@@ -46,7 +46,6 @@ export default function Sidebar({
                         <span>InfraStock</span>
                     </div>
 
-                    {/* Desktop collapse */}
                     <button
                         className="toggle-btn d-none d-lg-block"
                         onClick={() => setCollapsed(!collapsed)}
@@ -54,7 +53,6 @@ export default function Sidebar({
                         <i className="fas fa-bars"></i>
                     </button>
 
-                    {/* Mobile close */}
                     <button
                         className="toggle-btn d-lg-none"
                         onClick={() => setMobileOpen(false)}

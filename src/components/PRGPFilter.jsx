@@ -30,7 +30,11 @@ export default function PRGPFilter({ onSubmit, loading }) {
                     onChange={handleChange}
                 />
                 <small className="fst-italic text-secondary">
-                    Contoh: <code>"project"</code>
+                    Contoh:
+                    <ol>
+                        <li><code className="ms-1">project</code></li>
+                        <li><code className="ms-1">digital &amp; it</code></li>
+                    </ol>
                 </small>
             </div>
 
