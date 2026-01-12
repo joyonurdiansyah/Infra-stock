@@ -1,6 +1,6 @@
 // src/components/ProtectedRoute.jsx
 import { Navigate } from "react-router-dom";
-import { isAuthenticated } from "../services/authService";
+import { isAuthenticated } from "../../services/authService";
 
 export default function ProtectedRoute({ children }) {
     if (!isAuthenticated()) {
