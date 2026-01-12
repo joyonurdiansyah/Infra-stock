@@ -52,28 +52,26 @@ export default function Dashboard() {
 
       const { data, error } = await supabase
         .from("master_pr")
-        .select("id, pr_number, item_specification, status, company, received_date")
+        .select(
+          "id, pr_number, item_specification, status, company, received_date"
+        )
         .order("received_date", { ascending: false });
 
       if (error) {
-        console.error("Dashboard error:", error);
+        console.error(error);
         setLoading(false);
         return;
       }
 
-      /* ================= KPI ================= */
       const total = data.length;
       const completed = data.filter((d) => d.status === "Completed").length;
-
       const inProgress = data.filter(
         (d) =>
-          d.status === "Submit to Purchasing" ||
-          d.status === "PO Issued"
+          d.status === "Submit to Purchasing" || d.status === "PO Issued"
       ).length;
 
       setStats({ total, completed, inProgress });
 
-      /* ================= PIE CHART ================= */
       const statusCount = {};
       STATUS_LIST.forEach((s) => (statusCount[s] = 0));
 
@@ -120,45 +118,48 @@ export default function Dashboard() {
       />
 
       <div className="flex-grow-1 w-100">
-        {/* TOP NAV */}
         <nav className="navbar navbar-light bg-white shadow-sm px-3 px-lg-4">
-          <div className="d-flex align-items-center gap-3">
-            <button
-              className="btn btn-outline-secondary d-lg-none"
-              onClick={() => setMobileOpen(true)}
-            >
-              <i className="fas fa-bars"></i>
-            </button>
-            <span className="navbar-brand mb-0 h5">Dashboard</span>
-          </div>
+          <span className="navbar-brand mb-0 h5">Dashboard</span>
         </nav>
 
         <div className="container-fluid p-3 p-lg-4">
           {/* KPI */}
           <div className="row g-3 g-lg-4 mb-4">
             <StatCard title="Total PR" value={stats.total} />
-            <StatCard title="PR In Progress" value={stats.inProgress} color="warning" />
-            <StatCard title="PR Completed" value={stats.completed} color="success" />
+            <StatCard
+              title="PR In Progress"
+              value={stats.inProgress}
+              color="warning"
+            />
+            <StatCard
+              title="PR Completed"
+              value={stats.completed}
+              color="success"
+            />
           </div>
 
           {/* CHART */}
           <div className="row g-3 g-lg-4 mb-4">
+            {/* PIE */}
             <div className="col-12 col-lg-4">
               <div className="card shadow-sm border-0 h-100">
                 <div className="card-header bg-white fw-semibold">
                   Status PR
                 </div>
-                <div className="card-body" style={{ height: 260 }}>
+
+                <div className="card-body" style={{ height: 300 }}>
                   {loading ? (
-                    <div className="text-center text-muted">Loading...</div>
+                    <div className="text-muted text-center">Loading...</div>
                   ) : (
                     <ResponsiveContainer width="100%" height="100%">
                       <PieChart>
                         <Pie
                           data={statusChart}
                           dataKey="value"
-                          innerRadius={60}
-                          outerRadius={90}
+                          cx="50%"
+                          cy="45%"
+                          innerRadius="55%"
+                          outerRadius="75%"
                         >
                           {statusChart.map((entry) => (
                             <Cell
@@ -168,12 +169,15 @@ export default function Dashboard() {
                           ))}
                         </Pie>
                         <Tooltip />
-                        <Legend 
-                          verticalAlign="middle" 
-                          align="right"
-                          layout="vertical"
+                        <Legend
+                          layout="horizontal"
+                          verticalAlign="bottom"
+                          align="center"
                           iconType="circle"
-                          wrapperStyle={{ paddingLeft: "10px", fontSize: "12px" }}
+                          wrapperStyle={{
+                            fontSize: "12px",
+                            paddingTop: 10,
+                          }}
                         />
                       </PieChart>
                     </ResponsiveContainer>
@@ -182,12 +186,13 @@ export default function Dashboard() {
               </div>
             </div>
 
+            {/* BAR */}
             <div className="col-12 col-lg-8">
               <div className="card shadow-sm border-0 h-100">
                 <div className="card-header bg-white fw-semibold">
                   PR per Company
                 </div>
-                <div className="card-body" style={{ height: 260 }}>
+                <div className="card-body" style={{ height: 300 }}>
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={companyChart}>
                       <XAxis dataKey="name" />
@@ -201,14 +206,13 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {/* LATEST PR */}
+          {/* TABLE */}
           <div className="card shadow-sm border-0">
             <div className="card-header bg-white fw-semibold">
               PR Terbaru
             </div>
-
             <div className="table-responsive">
-              <table className="table table-hover mb-0 align-middle">
+              <table className="table table-hover mb-0">
                 <thead className="table-light">
                   <tr>
                     <th>No</th>
@@ -228,7 +232,10 @@ export default function Dashboard() {
                       <td>
                         <span
                           className="badge"
-                          style={{ backgroundColor: STATUS_COLOR[pr.status] }}
+                          style={{
+                            backgroundColor:
+                              STATUS_COLOR[pr.status],
+                          }}
                         >
                           {pr.status}
                         </span>
@@ -240,7 +247,7 @@ export default function Dashboard() {
             </div>
           </div>
         </div>
-        {/* FOOTER */}
+
         <Footer />
       </div>
     </div>
