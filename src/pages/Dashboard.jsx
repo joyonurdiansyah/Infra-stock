@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import Sidebar from "../components/Sidebar";
+import Sidebar from "../components/common/Sidebar";
 import { supabase } from "../services/supabaseClient";
 import {
   PieChart,
@@ -13,7 +13,7 @@ import {
   ResponsiveContainer,
   Legend,
 } from "recharts";
-import Footer from "../components/Footer";
+import Footer from "../components/common/Footer";
 
 const STATUS_LIST = [
   "Canceled",
