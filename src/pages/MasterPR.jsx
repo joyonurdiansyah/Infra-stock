@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Sidebar from "../components/Sidebar";
 import Footer from "../components/Footer";
-import MasterPRTable from "../components/MasterPRTable";
+import MasterPRTable from "../components/master-pr/MasterPRTable";
 import ImportPRModal from "../components/master-pr/ImportPRModal";
 import ManualPRModal from "../components/master-pr/ManualPRModal";
 import useImportMasterPR from "../hooks/useImportMasterPR";

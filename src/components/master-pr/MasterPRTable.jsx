@@ -6,8 +6,8 @@ import {
     getFilteredRowModel,
     useReactTable,
 } from "@tanstack/react-table";
-import { supabase } from "../services/supabaseClient";
-import EditPRModal from "./master-pr/EditPRModal";
+import { supabase } from "../../services/supabaseClient";
+import EditPRModal from "./EditPRModal";
 
 export default function MasterPRTable({ reloadKey }) {
     const [data, setData] = useState([]);
