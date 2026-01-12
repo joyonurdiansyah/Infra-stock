@@ -3,7 +3,7 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import PRGP from "./pages/PRGP";
 import MasterPR from "./pages/MasterPR";
-import ProtectedRoute from "./components/ProtectedRoute";
+import ProtectedRoute from "./components/layout/ProtectedRoute";
 import "./App.css";
 
 function App() {

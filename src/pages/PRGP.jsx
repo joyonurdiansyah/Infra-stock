@@ -1,6 +1,6 @@
 import { useState } from "react";
-import Sidebar from "../components/Sidebar";
-import Footer from "../components/Footer";
+import Sidebar from "../components/common/Sidebar";
+import Footer from "../components/common/Footer";
 import { fetchPrGp } from "../services/prGpService";
 import PRGPFilter from "../components/prgp-pr/PRGPFilter";
 import PRGPTable from "../components/prgp-pr/PRGPTable";

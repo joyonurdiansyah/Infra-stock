@@ -1,6 +1,6 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { logout } from "../../services/authService";
-import "../styles/sidebar.css";
+import "../../styles/sidebar.css";
 
 export default function Sidebar({
     collapsed,
