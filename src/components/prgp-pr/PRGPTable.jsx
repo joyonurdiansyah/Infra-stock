@@ -17,7 +17,10 @@ export default function PRGPTable({ data }) {
             {
                 header: "No",
                 cell: ({ row, table }) =>
-                    row.index + 1 + table.getState().pagination.pageIndex * table.getState().pagination.pageSize,
+                    row.index +
+                    1 +
+                    table.getState().pagination.pageIndex *
+                    table.getState().pagination.pageSize,
             },
             { accessorKey: "PR_Desc", header: "PR Admin" },
             { accessorKey: "PR_Number", header: "PR Number" },
@@ -57,7 +60,6 @@ export default function PRGPTable({ data }) {
         []
     );
 
-
     const table = useReactTable({
         data,
         columns,
@@ -73,14 +75,24 @@ export default function PRGPTable({ data }) {
 
     return (
         <>
-            {/* Wrapper agar tidak keluar layout */}
-            <div className="table-responsive" style={{ overflowX: "auto", width: "100%", }}>
-                <table className="table table-hover table-bordered mb-0 text-nowrap">
+            {/* === HORIZONTAL SCROLL WRAPPER === */}
+            <div
+                style={{
+                    overflowX: "auto",
+                    width: "100%",
+                }}
+            >
+                <table
+                    className="table table-bordered table-hover mb-0 text-nowrap"
+                    style={{
+                        minWidth: "1400px", // 🔥 KUNCI UTAMA
+                    }}
+                >
                     <thead className="table-light">
                         {table.getHeaderGroups().map((hg) => (
                             <tr key={hg.id}>
                                 {hg.headers.map((header) => (
-                                    <th key={header.id}>
+                                    <th key={header.id} className="align-middle">
                                         {flexRender(
                                             header.column.columnDef.header,
                                             header.getContext()
@@ -95,7 +107,7 @@ export default function PRGPTable({ data }) {
                         {table.getRowModel().rows.map((row) => (
                             <tr key={row.id}>
                                 {row.getVisibleCells().map((cell) => (
-                                    <td key={cell.id}>
+                                    <td key={cell.id} className="align-middle">
                                         {flexRender(
                                             cell.column.columnDef.cell,
                                             cell.getContext()
@@ -108,8 +120,8 @@ export default function PRGPTable({ data }) {
                 </table>
             </div>
 
-            {/* Pagination */}
-            <div className="d-flex justify-content-between align-items-center p-3">
+            {/* PAGINATION */}
+            <div className="flex-grow-1 w-100 d-flex flex-column position-relative">
                 <span>
                     Page {pagination.pageIndex + 1} dari {table.getPageCount()}
                 </span>

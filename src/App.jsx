@@ -1,8 +1,8 @@
-// src/App.jsx
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import PRGP from "./pages/PRGP";
+import MasterPR from "./pages/MasterPR";
 import ProtectedRoute from "./components/ProtectedRoute";
 import "./App.css";
 
@@ -11,6 +11,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<Login />} />
+
         <Route
           path="/dashboard"
           element={
@@ -19,6 +20,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+
         <Route
           path="/prgp"
           element={
@@ -27,6 +29,17 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        {/* ✅ MASTER PR */}
+        <Route
+          path="/master-pr"
+          element={
+            <ProtectedRoute>
+              <MasterPR />
+            </ProtectedRoute>
+          }
+        />
+
         <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>

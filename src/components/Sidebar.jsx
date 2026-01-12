@@ -14,7 +14,9 @@ export default function Sidebar({
     const menu = [
         { label: "Beranda", icon: "fas fa-home", path: "/dashboard" },
         { label: "PR GP", icon: "fas fa-file-alt", path: "/prgp" },
+        { label: "Master PR", icon: "fas fa-database", path: "/master-pr" }, 
     ];
+
 
     const activeIndex = menu.findIndex(
         (item) => item.path === location.pathname

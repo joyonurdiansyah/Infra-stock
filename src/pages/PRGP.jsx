@@ -1,9 +1,11 @@
 import { useState } from "react";
 import Sidebar from "../components/Sidebar";
+import Footer from "../components/Footer";
 import { fetchPrGp } from "../services/prGpService";
-import PRGPFilter from "../components/PRGPFilter";
-import PRGPTable from "../components/PRGPTable";
-import LoadingSpinner from "../components/LoadingSpinner";
+import PRGPFilter from "../components/prgp-pr/PRGPFilter";
+import PRGPTable from "../components/prgp-pr/PRGPTable";
+import LoadingSpinner from "../components/loader-animation/LoadingSpinner";
+
 import {
   alertSuccess,
   alertWarning,
@@ -11,8 +13,8 @@ import {
 } from "../utils/Alert";
 
 export default function PRGP() {
-  const [collapsed, setCollapsed] = useState(false);   
-  const [mobileOpen, setMobileOpen] = useState(false); 
+  const [collapsed, setCollapsed] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -51,7 +53,8 @@ export default function PRGP() {
   };
 
   return (
-    <div className="app-layout">
+    <div className="d-flex min-vh-100 bg-light">
+      {/* SIDEBAR */}
       <Sidebar
         collapsed={collapsed}
         setCollapsed={setCollapsed}
@@ -59,8 +62,10 @@ export default function PRGP() {
         setMobileOpen={setMobileOpen}
       />
 
-      <main className="app-content position-relative">
-        <div className="d-lg-none mb-3">
+      {/* CONTENT */}
+      <div className="flex-grow-1 w-100 d-flex flex-column position-relative">
+        {/* MOBILE MENU BUTTON */}
+        <div className="d-lg-none p-3 bg-white border-bottom">
           <button
             className="btn btn-outline-secondary"
             onClick={() => setMobileOpen(true)}
@@ -70,6 +75,7 @@ export default function PRGP() {
           </button>
         </div>
 
+        {/* LOADING OVERLAY */}
         {loading && (
           <div
             style={{
@@ -86,18 +92,31 @@ export default function PRGP() {
           </div>
         )}
 
-        <h4 className="mb-3">PR GP</h4>
+        {/* MAIN CONTENT */}
+        <div className="flex-grow-1 d-flex flex-column">
+          {/* TOP NAV */}
+          <nav className="navbar navbar-light bg-white shadow-sm px-4">
+            <span className="navbar-brand h5 mb-0">PR GP</span>
+          </nav>
 
-        <PRGPFilter onSubmit={handleSearch} loading={loading} />
+          {/* MAIN CONTENT */}
+          <main className="container-fluid p-3 p-lg-4 flex-grow-1">
+            <PRGPFilter onSubmit={handleSearch} loading={loading} />
 
-        {error && <div className="alert alert-danger">{error}</div>}
+            {error && <div className="alert alert-danger mt-3">{error}</div>}
 
-        <div className="card shadow-sm">
-          <div className="card-body p-0">
-            <PRGPTable data={data} />
-          </div>
+            <div className="card shadow-sm mt-3">
+              <div className="card-body p-0">
+                <PRGPTable data={data} />
+              </div>
+            </div>
+          </main>
         </div>
-      </main>
+
+
+        {/* FOOTER */}
+        <Footer />
+      </div>
     </div>
   );
 }

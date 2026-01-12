@@ -1,9 +1,114 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Sidebar from "../components/Sidebar";
+import { supabase } from "../services/supabaseClient";
+import {
+  PieChart,
+  Pie,
+  Cell,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  Legend,
+} from "recharts";
+import Footer from "../components/Footer";
+
+const STATUS_LIST = [
+  "Canceled",
+  "Rejected",
+  "Submit to Purchasing",
+  "PO Issued",
+  "Completed",
+];
+
+const STATUS_COLOR = {
+  Completed: "#198754",
+  "PO Issued": "#0d6efd",
+  "Submit to Purchasing": "#ffc107",
+  Rejected: "#dc3545",
+  Canceled: "#6c757d",
+};
 
 export default function Dashboard() {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  const [stats, setStats] = useState({
+    total: 0,
+    completed: 0,
+    inProgress: 0,
+  });
+
+  const [statusChart, setStatusChart] = useState([]);
+  const [companyChart, setCompanyChart] = useState([]);
+  const [latestPR, setLatestPR] = useState([]);
+
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      setLoading(true);
+
+      const { data, error } = await supabase
+        .from("master_pr")
+        .select("id, pr_number, item_specification, status, company, received_date")
+        .order("received_date", { ascending: false });
+
+      if (error) {
+        console.error("Dashboard error:", error);
+        setLoading(false);
+        return;
+      }
+
+      /* ================= KPI ================= */
+      const total = data.length;
+      const completed = data.filter((d) => d.status === "Completed").length;
+
+      const inProgress = data.filter(
+        (d) =>
+          d.status === "Submit to Purchasing" ||
+          d.status === "PO Issued"
+      ).length;
+
+      setStats({ total, completed, inProgress });
+
+      /* ================= PIE CHART ================= */
+      const statusCount = {};
+      STATUS_LIST.forEach((s) => (statusCount[s] = 0));
+
+      data.forEach((d) => {
+        if (statusCount[d.status] !== undefined) {
+          statusCount[d.status]++;
+        }
+      });
+
+      setStatusChart(
+        Object.entries(statusCount).map(([name, value]) => ({
+          name,
+          value,
+        }))
+      );
+
+      const companyMap = {};
+      data.forEach((d) => {
+        if (!d.company) return;
+        companyMap[d.company] = (companyMap[d.company] || 0) + 1;
+      });
+
+      setCompanyChart(
+        Object.entries(companyMap).map(([name, value]) => ({
+          name,
+          value,
+        }))
+      );
+
+      setLatestPR(data.slice(0, 5));
+      setLoading(false);
+    };
+
+    fetchDashboardData();
+  }, []);
 
   return (
     <div className="d-flex min-vh-100 bg-light">
@@ -15,6 +120,7 @@ export default function Dashboard() {
       />
 
       <div className="flex-grow-1 w-100">
+        {/* TOP NAV */}
         <nav className="navbar navbar-light bg-white shadow-sm px-3 px-lg-4">
           <div className="d-flex align-items-center gap-3">
             <button
@@ -23,78 +129,131 @@ export default function Dashboard() {
             >
               <i className="fas fa-bars"></i>
             </button>
-
             <span className="navbar-brand mb-0 h5">Dashboard</span>
           </div>
-
-          <span className="text-muted small d-none d-md-block">
-            Admin Panel
-          </span>
         </nav>
 
         <div className="container-fluid p-3 p-lg-4">
+          {/* KPI */}
+          <div className="row g-3 g-lg-4 mb-4">
+            <StatCard title="Total PR" value={stats.total} />
+            <StatCard title="PR In Progress" value={stats.inProgress} color="warning" />
+            <StatCard title="PR Completed" value={stats.completed} color="success" />
+          </div>
 
-          <div className="card shadow-sm mb-4 border-0">
-            <div className="card-body">
-              <h5 className="fw-bold mb-1">Selamat Datang 👋</h5>
-              <p className="text-muted mb-0">
-                Mantau PR GP dan inventarisasi barang dengan mudah di InfraStock.
-              </p>
+          {/* CHART */}
+          <div className="row g-3 g-lg-4 mb-4">
+            <div className="col-12 col-lg-4">
+              <div className="card shadow-sm border-0 h-100">
+                <div className="card-header bg-white fw-semibold">
+                  Status PR
+                </div>
+                <div className="card-body" style={{ height: 260 }}>
+                  {loading ? (
+                    <div className="text-center text-muted">Loading...</div>
+                  ) : (
+                    <ResponsiveContainer width="100%" height="100%">
+                      <PieChart>
+                        <Pie
+                          data={statusChart}
+                          dataKey="value"
+                          innerRadius={60}
+                          outerRadius={90}
+                        >
+                          {statusChart.map((entry) => (
+                            <Cell
+                              key={entry.name}
+                              fill={STATUS_COLOR[entry.name]}
+                            />
+                          ))}
+                        </Pie>
+                        <Tooltip />
+                        <Legend 
+                          verticalAlign="middle" 
+                          align="right"
+                          layout="vertical"
+                          iconType="circle"
+                          wrapperStyle={{ paddingLeft: "10px", fontSize: "12px" }}
+                        />
+                      </PieChart>
+                    </ResponsiveContainer>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="col-12 col-lg-8">
+              <div className="card shadow-sm border-0 h-100">
+                <div className="card-header bg-white fw-semibold">
+                  PR per Company
+                </div>
+                <div className="card-body" style={{ height: 260 }}>
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={companyChart}>
+                      <XAxis dataKey="name" />
+                      <YAxis />
+                      <Tooltip />
+                      <Bar dataKey="value" />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
             </div>
           </div>
 
-          <div className="row g-3 g-lg-4 mb-4">
-            {[
-              { title: "Total PR", value: 24 },
-              { title: "PR On Going", value: 8, color: "warning" },
-              { title: "PR Selesai", value: 16, color: "success" },
-            ].map((item, i) => (
-              <div key={i} className="col-12 col-md-4">
-                <div className="card shadow-sm border-0">
-                  <div className="card-body">
-                    <h6 className="text-muted">{item.title}</h6>
-                    <h3 className={`fw-bold text-${item.color || "dark"}`}>
-                      {item.value}
-                    </h3>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
+          {/* LATEST PR */}
           <div className="card shadow-sm border-0">
             <div className="card-header bg-white fw-semibold">
               PR Terbaru
             </div>
 
             <div className="table-responsive">
-              <table className="table table-hover mb-0">
+              <table className="table table-hover mb-0 align-middle">
                 <thead className="table-light">
                   <tr>
                     <th>No</th>
                     <th>PR Number</th>
-                    <th>Lokasi / Item</th>
+                    <th>Item</th>
                     <th>Status</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>1</td>
-                    <td>03/P12/X/25/IT</td>
-                    <td>Upgrade CCTV P12</td>
-                    <td><span className="badge bg-warning">On Going</span></td>
-                  </tr>
-                  <tr>
-                    <td>2</td>
-                    <td>PR/0056/XII/IT</td>
-                    <td>Ruang Server P5</td>
-                    <td><span className="badge bg-success">Selesai</span></td>
-                  </tr>
+                  {latestPR.map((pr, i) => (
+                    <tr key={pr.id}>
+                      <td>{i + 1}</td>
+                      <td>{pr.pr_number}</td>
+                      <td className="text-truncate" style={{ maxWidth: 300 }}>
+                        {pr.item_specification}
+                      </td>
+                      <td>
+                        <span
+                          className="badge"
+                          style={{ backgroundColor: STATUS_COLOR[pr.status] }}
+                        >
+                          {pr.status}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>
           </div>
+        </div>
+        {/* FOOTER */}
+        <Footer />
+      </div>
+    </div>
+  );
+}
 
+function StatCard({ title, value, color = "dark" }) {
+  return (
+    <div className="col-12 col-md-4">
+      <div className="card shadow-sm border-0 h-100">
+        <div className="card-body">
+          <h6 className="text-muted">{title}</h6>
+          <h3 className={`fw-bold text-${color}`}>{value}</h3>
         </div>
       </div>
     </div>
