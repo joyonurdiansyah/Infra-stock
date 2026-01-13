@@ -64,18 +64,18 @@ export default function Login() {
                             required
                         />
                     </span>
-                    <span className="span">
+                    {/* <span className="span">
                         <a href="#">Forgot password?</a>
-                    </span>
+                    </span> */}
                     <input
                         className="submit"
                         type="submit"
                         value={loading ? "Loading..." : "Log in"}
                         disabled={loading}
                     />
-                    <span className="span">
+                    {/* <span className="span">
                         Don't have an account? <a href="#">Sign up</a>
-                    </span>
+                    </span> */}
                 </form>
             </div>
         </div>

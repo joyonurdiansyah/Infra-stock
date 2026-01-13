@@ -1,0 +1,11 @@
+version: "3.9"
+
+services:
+  infra-stock:
+    container_name: infra-stock
+    build: .
+    ports:
+      - "3000:80"
+    env_file:
+      - .env
+    restart: unless-stopped

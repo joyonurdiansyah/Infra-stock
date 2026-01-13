@@ -18,12 +18,13 @@ export default function PRGP() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  console.log("PRGP Rendered");
 
   const handleSearch = async (payload) => {
     setLoading(true);
     setError("");
     setData([]);
-
+    
     try {
       const result = await fetchPrGp(payload);
 
