@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Sidebar from "../components/common/Sidebar";
+import Footer from "../components/common/Footer";
 import { supabase } from "../services/supabaseClient";
 import {
   PieChart,
@@ -13,7 +14,6 @@ import {
   ResponsiveContainer,
   Legend,
 } from "recharts";
-import Footer from "../components/common/Footer";
 
 const STATUS_LIST = [
   "Canceled",
@@ -110,6 +110,7 @@ export default function Dashboard() {
 
   return (
     <div className="d-flex min-vh-100 bg-light">
+      {/* SIDEBAR */}
       <Sidebar
         collapsed={collapsed}
         setCollapsed={setCollapsed}
@@ -117,137 +118,155 @@ export default function Dashboard() {
         setMobileOpen={setMobileOpen}
       />
 
-      <div className="flex-grow-1 w-100">
-        <nav className="navbar navbar-light bg-white shadow-sm px-3 px-lg-4">
-          <span className="navbar-brand mb-0 h5">Dashboard</span>
-        </nav>
-
-        <div className="container-fluid p-3 p-lg-4">
-          {/* KPI */}
-          <div className="row g-3 g-lg-4 mb-4">
-            <StatCard title="Total PR" value={stats.total} />
-            <StatCard
-              title="PR In Progress"
-              value={stats.inProgress}
-              color="warning"
-            />
-            <StatCard
-              title="PR Completed"
-              value={stats.completed}
-              color="success"
-            />
-          </div>
-
-          {/* CHART */}
-          <div className="row g-3 g-lg-4 mb-4">
-            {/* PIE */}
-            <div className="col-12 col-lg-4">
-              <div className="card shadow-sm border-0 h-100">
-                <div className="card-header bg-white fw-semibold">
-                  Status PR
-                </div>
-
-                <div className="card-body" style={{ height: 300 }}>
-                  {loading ? (
-                    <div className="text-muted text-center">Loading...</div>
-                  ) : (
-                    <ResponsiveContainer width="100%" height="100%">
-                      <PieChart>
-                        <Pie
-                          data={statusChart}
-                          dataKey="value"
-                          cx="50%"
-                          cy="45%"
-                          innerRadius="55%"
-                          outerRadius="75%"
-                        >
-                          {statusChart.map((entry) => (
-                            <Cell
-                              key={entry.name}
-                              fill={STATUS_COLOR[entry.name]}
-                            />
-                          ))}
-                        </Pie>
-                        <Tooltip />
-                        <Legend
-                          layout="horizontal"
-                          verticalAlign="bottom"
-                          align="center"
-                          iconType="circle"
-                          wrapperStyle={{
-                            fontSize: "12px",
-                            paddingTop: 10,
-                          }}
-                        />
-                      </PieChart>
-                    </ResponsiveContainer>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            {/* BAR */}
-            <div className="col-12 col-lg-8">
-              <div className="card shadow-sm border-0 h-100">
-                <div className="card-header bg-white fw-semibold">
-                  PR per Company
-                </div>
-                <div className="card-body" style={{ height: 300 }}>
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={companyChart}>
-                      <XAxis dataKey="name" />
-                      <YAxis />
-                      <Tooltip />
-                      <Bar dataKey="value" />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* TABLE */}
-          <div className="card shadow-sm border-0">
-            <div className="card-header bg-white fw-semibold">
-              PR Terbaru
-            </div>
-            <div className="table-responsive">
-              <table className="table table-hover mb-0">
-                <thead className="table-light">
-                  <tr>
-                    <th>No</th>
-                    <th>PR Number</th>
-                    <th>Item</th>
-                    <th>Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {latestPR.map((pr, i) => (
-                    <tr key={pr.id}>
-                      <td>{i + 1}</td>
-                      <td>{pr.pr_number}</td>
-                      <td className="text-truncate" style={{ maxWidth: 300 }}>
-                        {pr.item_specification}
-                      </td>
-                      <td>
-                        <span
-                          className="badge"
-                          style={{
-                            backgroundColor:
-                              STATUS_COLOR[pr.status],
-                          }}
-                        >
-                          {pr.status}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
+      {/* CONTENT */}
+      <div className="flex-grow-1 w-100 d-flex flex-column position-relative">
+        {/* MOBILE MENU BUTTON */}
+        <div className="d-lg-none p-3 bg-white border-bottom">
+          <button
+            className="btn btn-outline-secondary"
+            onClick={() => setMobileOpen(true)}
+          >
+            <i className="fas fa-bars me-2"></i>
+            Menu
+          </button>
         </div>
 
+        {/* MAIN CONTENT */}
+        <div className="flex-grow-1 d-flex flex-column">
+          {/* TOP NAV */}
+          <nav className="navbar navbar-light bg-white shadow-sm px-3 px-lg-4">
+            <span className="navbar-brand mb-0 h5">Dashboard</span>
+          </nav>
+
+          {/* PAGE CONTENT */}
+          <main className="container-fluid p-3 p-lg-4 flex-grow-1">
+            {/* KPI */}
+            <div className="row g-3 g-lg-4 mb-4">
+              <StatCard title="Total PR" value={stats.total} />
+              <StatCard
+                title="PR In Progress"
+                value={stats.inProgress}
+                color="warning"
+              />
+              <StatCard
+                title="PR Completed"
+                value={stats.completed}
+                color="success"
+              />
+            </div>
+
+            {/* CHART */}
+            <div className="row g-3 g-lg-4 mb-4">
+              {/* PIE */}
+              <div className="col-12 col-lg-4">
+                <div className="card shadow-sm border-0 h-100">
+                  <div className="card-header bg-white fw-semibold">
+                    Status PR
+                  </div>
+
+                  <div className="card-body" style={{ height: 300 }}>
+                    {loading ? (
+                      <div className="text-muted text-center">Loading...</div>
+                    ) : (
+                      <ResponsiveContainer width="100%" height="100%">
+                        <PieChart>
+                          <Pie
+                            data={statusChart}
+                            dataKey="value"
+                            cx="50%"
+                            cy="45%"
+                            innerRadius="55%"
+                            outerRadius="75%"
+                          >
+                            {statusChart.map((entry) => (
+                              <Cell
+                                key={entry.name}
+                                fill={STATUS_COLOR[entry.name]}
+                              />
+                            ))}
+                          </Pie>
+                          <Tooltip />
+                          <Legend
+                            layout="horizontal"
+                            verticalAlign="bottom"
+                            align="center"
+                            iconType="circle"
+                            wrapperStyle={{
+                              fontSize: "12px",
+                              paddingTop: 10,
+                            }}
+                          />
+                        </PieChart>
+                      </ResponsiveContainer>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* BAR */}
+              <div className="col-12 col-lg-8">
+                <div className="card shadow-sm border-0 h-100">
+                  <div className="card-header bg-white fw-semibold">
+                    PR per Company
+                  </div>
+                  <div className="card-body" style={{ height: 300 }}>
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={companyChart}>
+                        <XAxis dataKey="name" />
+                        <YAxis />
+                        <Tooltip />
+                        <Bar dataKey="value" />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* TABLE */}
+            <div className="card shadow-sm border-0">
+              <div className="card-header bg-white fw-semibold">
+                PR Terbaru
+              </div>
+              <div className="table-responsive">
+                <table className="table table-hover mb-0">
+                  <thead className="table-light">
+                    <tr>
+                      <th>No</th>
+                      <th>PR Number</th>
+                      <th>Item</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {latestPR.map((pr, i) => (
+                      <tr key={pr.id}>
+                        <td>{i + 1}</td>
+                        <td>{pr.pr_number}</td>
+                        <td className="text-truncate" style={{ maxWidth: 300 }}>
+                          {pr.item_specification}
+                        </td>
+                        <td>
+                          <span
+                            className="badge"
+                            style={{
+                              backgroundColor:
+                                STATUS_COLOR[pr.status],
+                            }}
+                          >
+                            {pr.status}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </main>
+        </div>
+
+        {/* FOOTER */}
         <Footer />
       </div>
     </div>

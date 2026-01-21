@@ -3,6 +3,7 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import PRGP from "./pages/PRGP";
 import MasterPR from "./pages/MasterPR";
+import PRGPChecklist from "./pages/PRGPChecklist";
 import ProtectedRoute from "./components/layout/ProtectedRoute";
 import "./App.css";
 
@@ -10,8 +11,10 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+        {/* AUTH */}
         <Route path="/login" element={<Login />} />
 
+        {/* DASHBOARD */}
         <Route
           path="/dashboard"
           element={
@@ -21,6 +24,7 @@ function App() {
           }
         />
 
+        {/* PRGP */}
         <Route
           path="/prgp"
           element={
@@ -30,7 +34,7 @@ function App() {
           }
         />
 
-        {/* ✅ MASTER PR */}
+        {/* MASTER PR */}
         <Route
           path="/master-pr"
           element={
@@ -40,6 +44,17 @@ function App() {
           }
         />
 
+        {/* PR GP CHECKLIST */}
+        <Route
+          path="/prgp-checklist"
+          element={
+            <ProtectedRoute>
+              <PRGPChecklist />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* DEFAULT */}
         <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>

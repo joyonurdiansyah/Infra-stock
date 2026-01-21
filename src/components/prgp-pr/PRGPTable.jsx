@@ -10,6 +10,35 @@ import { useMemo, useState } from "react";
 export default function PRGPTable({ data }) {
     const [columnFilters, setColumnFilters] = useState([]);
 
+    // Badge color helper
+    const getStatusBadge = (status, type) => {
+        if (!status || status === "None") {
+            return <span className="badge bg-secondary">None</span>;
+        }
+
+        const colorMap = {
+            PRStatus: {
+                New: "bg-info",
+                Partial: "bg-warning text-dark",
+                Closed: "bg-success",
+                Open: "bg-primary",
+            },
+            POStatus: {
+                New: "bg-info",
+                Open: "bg-primary",
+                Closed: "bg-success",
+            },
+            RCVStatus: {
+                New: "bg-info",
+                Open: "bg-warning text-dark",
+                Closed: "bg-success",
+            },
+        };
+
+        const color = colorMap[type]?.[status] || "bg-secondary";
+        return <span className={`badge ${color}`}>{status}</span>;
+    };
+
     const columns = useMemo(
         () => [
             {
@@ -38,29 +67,17 @@ export default function PRGPTable({ data }) {
             {
                 accessorKey: "PRStatus",
                 header: "PR Status",
-                cell: ({ getValue }) => (
-                    <span className="badge bg-primary">{getValue()}</span>
-                ),
+                cell: ({ getValue }) => getStatusBadge(getValue(), "PRStatus"),
             },
             {
                 accessorKey: "POStatus",
                 header: "PO Status",
-                cell: ({ getValue }) =>
-                    getValue() ? (
-                        <span className="badge bg-success">{getValue()}</span>
-                    ) : (
-                        "-"
-                    ),
+                cell: ({ getValue }) => getStatusBadge(getValue(), "POStatus"),
             },
             {
                 accessorKey: "RCVStatus",
                 header: "RCV Status",
-                cell: ({ getValue }) =>
-                    getValue() ? (
-                        <span className="badge bg-warning text-dark">{getValue()}</span>
-                    ) : (
-                        "-"
-                    ),
+                cell: ({ getValue }) => getStatusBadge(getValue(), "RCVStatus"),
             },
         ],
         []
@@ -101,8 +118,10 @@ export default function PRGPTable({ data }) {
                                 }
                             >
                                 <option value="">All PR Status</option>
-                                <option value="Closed">Closed</option>
+                                <option value="New">New</option>
+                                <option value="Partial">Partial</option>
                                 <option value="Open">Open</option>
+                                <option value="Closed">Closed</option>
                             </select>
                         </div>
 
@@ -116,8 +135,10 @@ export default function PRGPTable({ data }) {
                                 }
                             >
                                 <option value="">All PO Status</option>
-                                <option value="Closed">Closed</option>
+                                <option value="None">None</option>
+                                <option value="New">New</option>
                                 <option value="Open">Open</option>
+                                <option value="Closed">Closed</option>
                             </select>
                         </div>
 
@@ -131,8 +152,10 @@ export default function PRGPTable({ data }) {
                                 }
                             >
                                 <option value="">All RCV Status</option>
-                                <option value="Closed">Closed</option>
+                                <option value="None">None</option>
+                                <option value="New">New</option>
                                 <option value="Open">Open</option>
+                                <option value="Closed">Closed</option>
                             </select>
                         </div>
 

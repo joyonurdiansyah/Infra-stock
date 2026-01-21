@@ -17,6 +17,10 @@
 
 /* ===== SIDEBAR ===== */
 #nav-bar {
+  position: sticky;
+  top: 0;
+  left: 0;
+  height: 100vh;
   width: var(--navbar-width);
   background: #18283b;
   border-right: 6px solid #9c88ff;
@@ -25,6 +29,27 @@
   flex-direction: column;
   color: #f5f6fa;
   transition: width 0.3s ease;
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 50;
+}
+
+/* Scrollbar styling untuk sidebar */
+#nav-bar::-webkit-scrollbar {
+  width: 6px;
+}
+
+#nav-bar::-webkit-scrollbar-track {
+  background: #18283b;
+}
+
+#nav-bar::-webkit-scrollbar-thumb {
+  background: #9c88ff;
+  border-radius: 3px;
+}
+
+#nav-bar::-webkit-scrollbar-thumb:hover {
+  background: #7f6bff;
 }
 
 /* Collapsed desktop */
@@ -38,6 +63,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 16px;
+  flex-shrink: 0;
 }
 
 #nav-title {
@@ -58,12 +84,20 @@
   border: none;
   color: #fff;
   font-size: 1.3rem;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.toggle-btn:hover {
+  transform: scale(1.1);
 }
 
 /* ===== MENU ===== */
 #nav-content {
   position: relative;
   flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 #nav-content-highlight {
@@ -86,12 +120,18 @@
   text-decoration: none;
   position: relative;
   z-index: 2;
+  transition: all 0.2s ease;
 }
 
+.nav-button:hover {
+  color: #fff;
+  background: rgba(156, 136, 255, 0.2);
+}
 
 .nav-button i {
   width: 40px;
   text-align: center;
+  font-size: 1.1rem;
 }
 
 #nav-bar.collapsed .nav-button span {
@@ -102,6 +142,12 @@
   background: #9c88ff;
   border-radius: 14px 0 0 14px;
   color: #fff;
+}
+
+/* Logout button container */
+#nav-bar > .p-3 {
+  flex-shrink: 0;
+  margin-top: auto;
 }
 
 /* ===== MOBILE & TABLET ===== */
@@ -138,3 +184,18 @@
 .btn-purple:hover {
   background: #7f6bff;
 }
+
+/* ===== RESPONSIVENESS ===== */
+@media (min-width: 992px) {
+  /* Pastikan sidebar tetap sticky di desktop */
+  #nav-bar {
+    position: sticky;
+  }
+}
+
+/* Smooth transitions */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #9c88ff #18283b;
+}
+

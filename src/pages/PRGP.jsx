@@ -4,6 +4,7 @@ import Footer from "../components/common/Footer";
 import { fetchPrGp } from "../services/prGpService";
 import PRGPFilter from "../components/prgp-pr/PRGPFilter";
 import PRGPTable from "../components/prgp-pr/PRGPTable";
+import PRGPComparison from "../components/prgp-pr/PRGPComparison";
 import LoadingSpinner from "../components/loader-animation/LoadingSpinner";
 
 import {
@@ -18,6 +19,8 @@ export default function PRGP() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [showComparison, setShowComparison] = useState(false);
+  
   console.log("PRGP Rendered");
 
   const handleSearch = async (payload) => {
@@ -98,22 +101,38 @@ export default function PRGP() {
           {/* TOP NAV */}
           <nav className="navbar navbar-light bg-white shadow-sm px-4">
             <span className="navbar-brand h5 mb-0">PR GP</span>
+            
+            {/* Toggle Comparison Button */}
+            <button
+              className={`btn btn-sm ${showComparison ? 'btn-primary' : 'btn-outline-primary'}`}
+              onClick={() => setShowComparison(!showComparison)}
+            >
+              <i className={`fas ${showComparison ? 'fa-table' : 'fa-balance-scale'} me-2`}></i>
+              {showComparison ? 'Lihat Tabel' : 'Perbandingan Data'}
+            </button>
           </nav>
 
           {/* MAIN CONTENT */}
           <main className="container-fluid p-3 p-lg-4 flex-grow-1">
-            <PRGPFilter onSubmit={handleSearch} loading={loading} />
+            {/* Conditional Rendering: Show Filter only when Table mode */}
+            {!showComparison && (
+              <PRGPFilter onSubmit={handleSearch} loading={loading} />
+            )}
 
             {error && <div className="alert alert-danger mt-3">{error}</div>}
 
-            <div className="card shadow-sm mt-3">
-              <div className="card-body p-0">
-                <PRGPTable data={data} />
+            {/* Toggle between Table and Comparison */}
+            {!showComparison ? (
+              <div className="card shadow-sm mt-3">
+                <div className="card-body p-0">
+                  <PRGPTable data={data} />
+                </div>
               </div>
-            </div>
+            ) : (
+              <PRGPComparison />
+            )}
           </main>
         </div>
-
 
         {/* FOOTER */}
         <Footer />
